@@ -1,0 +1,100 @@
+[gd_scene load_steps=11 format=3 uid="uid://bb7vur0lsp8x6"]
+
+[ext_resource type="Script" path="res://NPC/enemy.gd" id="1_mp6lg"]
+[ext_resource type="Texture2D" uid="uid://dtw6n05o44vxb" path="res://Texture/NPC/frog-idle.png" id="2_gf7xu"]
+[ext_resource type="PackedScene" uid="uid://3v40uepb7yea" path="res://Utility/hit_box.tscn" id="3_d0kcd"]
+[ext_resource type="PackedScene" uid="uid://cctcbdj4hpc6p" path="res://Utility/hurt_box.tscn" id="4_cd7hb"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_8ueb6"]
+size = Vector2(20, 19)
+
+[sub_resource type="Animation" id="Animation_0vfa8"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [4]
+}
+
+[sub_resource type="Animation" id="Animation_wiqsk"]
+resource_name = "walk"
+length = 1.2
+loop_mode = 1
+step = 0.3
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.3, 0.6, 0.9),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [4, 5, 6, 4]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_rqual"]
+_data = {
+"RESET": SubResource("Animation_0vfa8"),
+"walk": SubResource("Animation_wiqsk")
+}
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_el7xh"]
+size = Vector2(22, 17)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_r1ohb"]
+radius = 7.0
+
+[node name="Frog" type="CharacterBody2D" groups=["enemy"]]
+collision_layer = 4
+script = ExtResource("1_mp6lg")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_gf7xu")
+hframes = 4
+vframes = 2
+frame = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 6.5)
+shape = SubResource("RectangleShape2D_8ueb6")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_rqual")
+}
+
+[node name="TurnTimer" type="Timer" parent="."]
+one_shot = true
+
+[node name="HitBox" parent="." instance=ExtResource("3_d0kcd")]
+collision_layer = 2
+collision_mask = 0
+knockback_amount = 180
+
+[node name="CollisionShape2D" parent="HitBox" index="0"]
+position = Vector2(0, 7.5)
+shape = SubResource("RectangleShape2D_el7xh")
+
+[node name="HurtBox" parent="." instance=ExtResource("4_cd7hb")]
+collision_layer = 0
+collision_mask = 4
+
+[node name="CollisionShape2D" parent="HurtBox" index="0"]
+position = Vector2(0, -2)
+shape = SubResource("CircleShape2D_r1ohb")
+
+[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_animation_player_animation_finished"]
+[connection signal="timeout" from="TurnTimer" to="." method="_on_turn_timer_timeout"]
+[connection signal="hurt" from="HurtBox" to="." method="_on_hurt_box_hurt"]
+
+[editable path="HitBox"]
+[editable path="HurtBox"]

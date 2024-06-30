@@ -1,0 +1,119 @@
+[gd_scene load_steps=12 format=3 uid="uid://cyn2nqsxnqh26"]
+
+[ext_resource type="Script" path="res://NPC/enemy.gd" id="1_4plrg"]
+[ext_resource type="Texture2D" uid="uid://daavj75cbx25r" path="res://Texture/NPC/slug.png" id="1_nx7q0"]
+[ext_resource type="PackedScene" uid="uid://cctcbdj4hpc6p" path="res://Utility/hurt_box.tscn" id="3_hqo7a"]
+[ext_resource type="PackedScene" uid="uid://3v40uepb7yea" path="res://Utility/hit_box.tscn" id="3_we1vv"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_8ueb6"]
+size = Vector2(22, 16)
+
+[sub_resource type="Animation" id="Animation_0vfa8"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="Animation" id="Animation_uggau"]
+resource_name = "death"
+length = 4.6
+step = 0.2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2, 3.8, 4, 4.6),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 1,
+"values": [4, 5, 6, 7, 3]
+}
+
+[sub_resource type="Animation" id="Animation_wiqsk"]
+resource_name = "walk"
+length = 1.6
+loop_mode = 1
+step = 0.4
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.4, 0.8, 1.2, 1.6),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3, 0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_rqual"]
+_data = {
+"RESET": SubResource("Animation_0vfa8"),
+"death": SubResource("Animation_uggau"),
+"walk": SubResource("Animation_wiqsk")
+}
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_el7xh"]
+size = Vector2(30, 14)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_r1ohb"]
+radius = 7.0
+
+[node name="Snail" type="CharacterBody2D" groups=["enemy"]]
+collision_layer = 4
+script = ExtResource("1_4plrg")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_nx7q0")
+hframes = 8
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 2)
+shape = SubResource("RectangleShape2D_8ueb6")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_rqual")
+}
+
+[node name="TurnTimer" type="Timer" parent="."]
+one_shot = true
+
+[node name="HitBox" parent="." instance=ExtResource("3_we1vv")]
+collision_layer = 2
+collision_mask = 0
+knockback_amount = 160
+
+[node name="CollisionShape2D" parent="HitBox" index="0"]
+position = Vector2(0, 3)
+shape = SubResource("RectangleShape2D_el7xh")
+
+[node name="HurtBox" parent="." instance=ExtResource("3_hqo7a")]
+collision_layer = 0
+collision_mask = 4
+
+[node name="CollisionShape2D" parent="HurtBox" index="0"]
+position = Vector2(0, -2)
+shape = SubResource("CircleShape2D_r1ohb")
+
+[node name="DisableHurtBox" parent="HurtBox" index="1"]
+wait_time = 4.8
+
+[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_animation_player_animation_finished"]
+[connection signal="timeout" from="TurnTimer" to="." method="_on_turn_timer_timeout"]
+[connection signal="hurt" from="HurtBox" to="." method="_on_hurt_box_hurt"]
+
+[editable path="HitBox"]
+[editable path="HurtBox"]

@@ -1,0 +1,19 @@
+[gd_scene load_steps=2 format=3 uid="uid://lpjo22qvxydr"]
+
+[ext_resource type="Script" path="res://Utility/button.gd" id="1_j8pgj"]
+
+[node name="Button" type="Button"]
+custom_minimum_size = Vector2(80, 30)
+offset_right = 80.0
+offset_bottom = 36.0
+theme_override_font_sizes/font_size = 20
+text = "Text"
+script = ExtResource("1_j8pgj")
+
+[node name="Hover" type="AudioStreamPlayer" parent="."]
+
+[node name="Click" type="AudioStreamPlayer" parent="."]
+
+[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
+[connection signal="pressed" from="." to="." method="_on_pressed"]
+[connection signal="finished" from="Click" to="." method="_on_click_finished"]

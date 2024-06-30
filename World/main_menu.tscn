@@ -1,0 +1,72 @@
+[gd_scene load_steps=3 format=3 uid="uid://3keeohqrpaun"]
+
+[ext_resource type="Script" path="res://World/main_menu.gd" id="1_bwcle"]
+[ext_resource type="PackedScene" uid="uid://lpjo22qvxydr" path="res://Utility/button.tscn" id="1_ifwpc"]
+
+[node name="MainMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_bwcle")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.196078, 0.172549, 0.262745, 1)
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -56.0
+offset_top = 32.0
+offset_right = 56.0
+offset_bottom = 80.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 30
+text = "Main Menu"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="NewGame" parent="." instance=ExtResource("1_ifwpc")]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = -80.0
+offset_right = 112.0
+offset_bottom = -48.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_font_sizes/font_size = 16
+text = "Start Game"
+
+[node name="Quit" parent="." instance=ExtResource("1_ifwpc")]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -112.0
+offset_top = -80.0
+offset_right = -8.0
+offset_bottom = -48.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_font_sizes/font_size = 16
+text = "Quit"
+
+[connection signal="click_end" from="NewGame" to="." method="_on_new_game_click_end"]
+[connection signal="click_end" from="Quit" to="." method="_on_quit_click_end"]

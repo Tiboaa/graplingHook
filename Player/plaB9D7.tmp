@@ -1,0 +1,41 @@
+[gd_scene load_steps=6 format=3 uid="uid://dnkkg0hemtvq2"]
+
+[ext_resource type="Texture2D" uid="uid://bvjlqjemqs5lu" path="res://Texture/Player/player.png" id="1_mqbdu"]
+[ext_resource type="Script" path="res://Player/player.gd" id="1_qf7vs"]
+[ext_resource type="PackedScene" uid="uid://3v40uepb7yea" path="res://Utility/hit_box.tscn" id="3_vhnog"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_tog86"]
+radius = 9.0
+height = 22.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_xu2tf"]
+radius = 6.0
+
+[node name="Player" type="CharacterBody2D" groups=["player"]]
+collision_layer = 0
+script = ExtResource("1_qf7vs")
+speed = null
+jump_velocity = null
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(0, -16)
+texture = ExtResource("1_mqbdu")
+hframes = 6
+vframes = 6
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -11)
+shape = SubResource("CapsuleShape2D_tog86")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(0, -58)
+limit_top = -160
+limit_bottom = -160
+
+[node name="HitBox" parent="." instance=ExtResource("3_vhnog")]
+
+[node name="CollisionShape2D" parent="HitBox" index="0"]
+position = Vector2(0, -1)
+shape = SubResource("CircleShape2D_xu2tf")
+
+[editable path="HitBox"]
